@@ -1,41 +1,29 @@
-# ISC19 Tutorial: Deep Learning At Scale
+# Deep Learning for Science School Tutorial: Deep Learning At Scale
 
-This repository contains the material for the ISC19 tutorial:
+This repository contains the material for the DL4Sci tutorial:
 *Deep Learning at Scale*.
 
-Here you will links to slides and resources as well as all the code
-for the hands-on sessions.
 It contains specifications for a few datasets, a couple of CNN models, and
 all the training code to enable training the models in a distributed fashion
 using Horovod.
 
-As part of the tutorial, you will
-1. Train a simple CNN to classify images from the CIFAR10 dataset on a single node
-2. Train a ResNet model to classify the same images on multiple nodes
+As part of the tutorial, you will train a ResNet model to classify images
+from the CIFAR10 dataset on multiple nodes with synchronous data parallelism.
 
 **Contents**
-* [Links](https://github.com/NERSC/isc19-dl-tutorial#links)
-* [Installation](https://github.com/NERSC/isc19-dl-tutorial#installation)
-* [Navigating the repository](https://github.com/NERSC/isc19-dl-tutorial#navigating-the-repository)
-* [Hands-on walk-through](https://github.com/NERSC/isc19-dl-tutorial#hands-on-walk-through)
-    * [Single node training example](https://github.com/NERSC/isc19-dl-tutorial#single-node-training-example)
-    * [Multi-node training example](https://github.com/NERSC/isc19-dl-tutorial#multi-node-training-example)
-    * [Advanced example: multi-node ResNet50 on ImageNet-100](https://github.com/NERSC/isc19-dl-tutorial#advanced-example-multi-node-resnet50-on-imagenet-100)
-* [Code references](https://github.com/NERSC/isc19-dl-tutorial#code-references)
+* [Links](https://github.com/NERSC/dl4sci-scaling-tutorial#links)
+* [Installation](https://github.com/NERSC/dl4sci-scaling-tutorial#installation)
+* [Navigating the repository](https://github.com/NERSC/dl4sci-scaling-tutorial#navigating-the-repository)
+* [Hands-on walk-through](https://github.com/NERSC/dl4sci-scaling-tutorial#hands-on-walk-through)
+* [Code references](https://github.com/NERSC/dl4sci-scaling-tutorial#code-references)
 
 ## Links
 
-Presentation slides: https://drive.google.com/drive/folders/1V35Lmkxmw7GwfHCyt6sPkc9lCuDmLPe2?usp=sharing
-
 NERSC JupyterHub: https://jupyter.nersc.gov
-
-Join Slack: https://join.slack.com/t/nersc-dl-tutorial/shared_invite/enQtNjQ4NTQ2OTc3MzYwLTQzNDJiOTJiZTkyZDg0ZmNhZTc4Y2ZiZjQwODg5ZmFiZGI5MjEyYWVkMWIyZDBjYTlhZjRmMjUwMjMwZWZiYzg
-
-## Installation
 
 1. Start a terminal on Cori, either via ssh or from the Jupyter interface.
 2. Clone the repository using git:\
-   `git clone https://github.com/NERSC/isc19-dl-tutorial.git`
+   `git clone https://github.com/NERSC/dl4sci-scaling-tutorial.git`
 
 That's it! The rest of the software (Keras, TensorFlow) is pre-installed on Cori
 and loaded via the scripts used below.
@@ -64,16 +52,14 @@ custom callbacks, device configuration, and optimizers logic.
 
 ## Hands-on walk-through
 
-Go through the following steps as directed by the tutorial presenters.
-Discuss the questions with your neighbors.
+Go through the following steps. Discuss the questions with your neighbors.
 
 ### Single node training example
 
 We will start with single node training of a simple CNN to classify images
 from the CIFAR10 dataset.
 
-1. Take a look at the simple CNN model defined here: [models/cnn.py](models/cnn.py).
-   Consider the following things:
+1. Take a look at the simple CNN model defined here: [models/cnn.py](models/cnn.py). Consider the following things:
     * Note how the model is constructed as a sequence of layers
     * Note the structure of alternating convolutions, pooling, and dropout
     * Identify the _classifier head_ of the model; the part which computes the
