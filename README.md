@@ -50,71 +50,15 @@ for easily submitting the example jobs to the Cori batch system.
 **`utils/`** - contains additional useful code for the training script, e.g.
 custom callbacks, device configuration, and optimizers logic.
 
-## Hands-on walk-through
+## Hands-on multi-node training example
 
-Go through the following steps. Discuss the questions with your neighbors.
-
-### Single node training example
-
-We will start with single node training of a simple CNN to classify images
-from the CIFAR10 dataset.
-
-1. Take a look at the simple CNN model defined here: [models/cnn.py](models/cnn.py). Consider the following things:
-    * Note how the model is constructed as a sequence of layers
-    * Note the structure of alternating convolutions, pooling, and dropout
-    * Identify the _classifier head_ of the model; the part which computes the
-      class probabilities.
-    * *Can you figure out what the `Flatten()` layer does here,
-      and why it is needed?*
-
-2. Now take a look at the dataset code for CIFAR10: [data/cifar10.py](data/cifar10.py)
-    * Keras has a convenient API for CIFAR10 which will automatically download
-      the dataset for you.
-    * Ask yourself: *why do we scale the dataset by 1/255?*
-    * Note where we convert the labels (integers) to categorical class vectors.
-      Ask yourself: *why do we have to do this?*
-    * *What kinds of data augmentation are we applying?*
-
-3. Next, take a look at the training script: [train_horovod.py](train_horovod.py).
-    * Identify the part where we retrieve the dataset.
-    * Identify the section where we retrieve the CNN model, the optimizer, and
-      compile the model.
-    * Now identify the part where we do the actual training.
-
-4. Finally, look at the configuration file: [configs/cifar10_cnn.yaml](configs/cifar10_cnn.yaml).
-    * YAML allows to express configurations in rich, human-readable, hierarchical structure.
-    * Identify where you would edit to modify the optimizer, learning-rate, batch-size, etc.
-
-5. Now we are ready to submit our training job to the Cori batch system.
-   We have provided SLURM scripts to make this as simple as possible.
-   To run the simple CNN training on CIFAR10 on a single KNL node, simply do:\
-   `sbatch scripts/cifar_cnn.sh`
-    * **Important:** the first time you run a CIFAR10 example, it will
-    automatically download the dataset. If you have more than one job attempting
-    this download simultaneously it will likely fail.
-
-6. Check on the status of your job by running `sqs`.
-   Once the job starts running, you should see the output start to appear in the
-   slurm log file `logs/cifar-cnn-*.out`.
-
-7. When the job is finished, check the log to identify how well your model learned
-   to solve the CIFAR10 classification task. For every epoch you should see the
-   loss and accuracy reported for both the training set and the validation set.
-   Take note of the best validation accuracy achieved.
-
-### Multi-node training example
-
-To demonstrate scaling to multiple nodes, we will switch to a larger, more complex
-ResNet model. This model can achieve higher accuracy than our simple CNN, but
-it is quite a bit slower to train. By parallelizing the training across nodes
-we should be able to achieve a better result than our simple CNN in a practical
-amount of time.
+We will use a customized ResNet model in this example to classify CIFAR10
+images and demonstrate distributed training with Horovod.
 
 1. Check out the ResNet model code in [models/resnet.py](models/resnet.py).
-   Note this is quite a bit more complex than the simple CNN! In fact the model
-   code is broken into multiple functions for easy reuse. We provide here two
-   versions of ResNet models: a standard ResNet50 (with 50 layers) and a smaller
-   ResNet consisting of 26 layers.
+   Note that the model code is broken into multiple functions for easy reuse.
+   We provide here two versions of ResNet models: a standard ResNet50 (with 50
+   layers) and a smaller ResNet consisting of 26 layers.
     * Identify the identy block and conv block functions. *How many convolutional
       layers do each of these have*?
     * Identify the functions that build the ResNet50 and the ResNetSmall. Given how
@@ -128,12 +72,17 @@ amount of time.
     * Note how we construct our optimizer and then wrap it in the Horovod
       DistributedOptimizer.
 
-3. Inspect [train.py](train_horovod.py) once again.
+3. Inspect the main [train_horovod.py](train_horovod.py) training script.
     * Identify the `init_workers` function where we initialize Horovod.
       Note where this is invoked in the main() function (right away).
-    * Identify where we setup our training callbacks.
+    * Identify where we setup our distributed training callbacks.
     * *Which callback ensures we have consistent model weights at the start of training?*
     * Identify the callbacks responsible for the learning rate schedule (warmup and decay).
+
+4. Finally, look at the configuration file:
+   [configs/cifar10_resnet.yaml](configs/cifar10_resnet.yaml)
+    * YAML allows to express configurations in rich, human-readable, hierarchical structure.
+    * Identify where you would edit to modify the optimizer, learning-rate, batch-size, etc.
 
 That's mostly it for the code. Note that in general when training distributed
 you might want to use more complicated data handling, e.g. to ensure different
@@ -142,24 +91,30 @@ epoch. In this case we aren't worrying about that and are, for simplicity,
 relying on the independent random shuffling of the data by each worker as well
 as the random data augmentation.
 
-4. (**optional**) To gain an appreciation for the speedup of training on
-   multiple nodes, you can first try to train the ResNet model on a single node.
+5. To gain an appreciation for the speedup of training on
+   multiple nodes, first train the ResNet model on a single node.
    Adjust the configuration in [configs/cifar10_resnet.yaml](configs/cifar10_resnet.yaml)
-   to train for just 1 epoch and then submit the job with\
+   to train for just 1 epoch and then submit the job to the Cori batch system with
+   SLURM sbatch and our provided SLURM batch script:\
    `sbatch -N 1 scripts/cifar_resnet.sh`
+    * **Important:** the first time you run a CIFAR10 example, it will
+    automatically download the dataset. If you have more than one job attempting
+    this download simultaneously it will likely fail.
 
-5. Now we are ready to train our ResNet model on multiple nodes using Horovod
+6. Now we are ready to train our ResNet model on multiple nodes using Horovod
    and MPI! If you changed the config to 1 epoch above, be sure to change it back
    to 32 epochs for this step. To launch the ResNet training on 8 nodes, do:\
    `sbatch -N 8 scripts/cifar_resnet.sh`
 
-6. As before, watch the log file (`logs/cifar-resnet-*.out`) when the job starts.
-   You'll see some printouts from every worker. Others are only printed from rank 0.
+7. Check on the status of your job by running `sqs`.
+   Once the job starts running, you should see the output start to appear in the
+   slurm log file `logs/cifar-cnn-*.out`. You'll see some printouts from every
+   worker. Others are only printed from rank 0.
 
-7. When the job is finished, look at the log and compare to the simple CNN case
-   above. If you ran step 4, compare the time to train one epoch between single-node
-   and multi-node. *Did your model manage to converge to a better validation accuracy
-   than the simple CNN?*
+8. When the job is finished, check the log to identify how well your model learned
+   to solve the CIFAR10 classification task. For every epoch you should see the
+   loss and accuracy reported for both the training set and the validation set.
+   Take note of the best validation accuracy achieved.
 
 Now that you've finished the main tutorial material, try to play with the code
 and/or configuration to see the effect on the training results. You can try changing
@@ -170,20 +125,6 @@ things like
 
 Most of these things can be changed entirely within the configuration.
 See [configs/imagenet_resnet.yaml](configs/imagenet_resnet.yaml) for examples.
-
-### Advanced example: multi-node ResNet50 on ImageNet-100
-
-We may not have the time and compute resources to do this (certainly not for
-all attendees), but this repository also includes a more advanced ResNet50 
-example and a 100-class subset of the ImageNet dataset. ResNet and ImageNet
-are a fairly standard benchmark for scalable deep learning methods.
-The configuration is available in
-[configs/imagenet_resnet.yaml](configs/imagenet_resnet.yaml)
-
-Please check with the presenters before submitting large scale training jobs
-with this example, as we have a limited reservation of nodes on Cori and we
-want to make sure all tutorial attendees are able to complete the core content
-and have a chance to play with settings in the ResNet-CIFAR example.
 
 ## Code references
 
