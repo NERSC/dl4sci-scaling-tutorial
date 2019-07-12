@@ -14,12 +14,15 @@ from the CIFAR10 dataset on multiple nodes with synchronous data parallelism.
 * [Links](https://github.com/NERSC/dl4sci-scaling-tutorial#links)
 * [Installation](https://github.com/NERSC/dl4sci-scaling-tutorial#installation)
 * [Navigating the repository](https://github.com/NERSC/dl4sci-scaling-tutorial#navigating-the-repository)
-* [Hands-on walk-through](https://github.com/NERSC/dl4sci-scaling-tutorial#hands-on-walk-through)
+* [Hands-on walk-through](https://github.com/NERSC/dl4sci-scaling-tutorial#hands-on-multi-node)
 * [Code references](https://github.com/NERSC/dl4sci-scaling-tutorial#code-references)
 
 ## Links
 
 NERSC JupyterHub: https://jupyter.nersc.gov
+Slides: https://drive.google.com/drive/folders/10NqOLaqPTZ0nobE7JNSaGwrXQi_ACD35?usp=sharing
+
+## Installation
 
 1. Start a terminal on Cori, either via ssh or from the Jupyter interface.
 2. Clone the repository using git:\
