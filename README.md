@@ -14,7 +14,7 @@ from the CIFAR10 dataset on multiple nodes with synchronous data parallelism.
 * [Links](https://github.com/NERSC/dl4sci-scaling-tutorial#links)
 * [Installation](https://github.com/NERSC/dl4sci-scaling-tutorial#installation)
 * [Navigating the repository](https://github.com/NERSC/dl4sci-scaling-tutorial#navigating-the-repository)
-* [Hands-on walk-through](https://github.com/NERSC/dl4sci-scaling-tutorial#hands-on-multi-node)
+* [Hands-on walk-through](https://github.com/NERSC/dl4sci-scaling-tutorial#hands-on-multi-node-training-example)
 * [Code references](https://github.com/NERSC/dl4sci-scaling-tutorial#code-references)
 
 ## Links
