@@ -20,6 +20,7 @@ from the CIFAR10 dataset on multiple nodes with synchronous data parallelism.
 ## Links
 
 NERSC JupyterHub: https://jupyter.nersc.gov
+
 Slides: https://drive.google.com/drive/folders/10NqOLaqPTZ0nobE7JNSaGwrXQi_ACD35?usp=sharing
 
 ## Installation
