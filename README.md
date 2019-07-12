@@ -1,9 +1,9 @@
-# Deep Learning for Science School Tutorial: Deep Learning At Scale
+# Deep Learning for Science School Tutorial:<br>Deep Learning At Scale
 
 This repository contains the material for the DL4Sci tutorial:
 *Deep Learning at Scale*.
 
-It contains specifications for a few datasets, a couple of CNN models, and
+It contains specifications for datasets, a couple of CNN models, and
 all the training code to enable training the models in a distributed fashion
 using Horovod.
 
