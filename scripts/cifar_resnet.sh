@@ -9,6 +9,8 @@
 
 # Load the software
 module load tensorflow/intel-1.13.1-py36
+export KMP_BLOCKTIME=1
+export KMP_AFFINITY="granularity=fine,compact,1,0"
 
 # Ensure dataset is downloaded by single process
 python -c "import keras; keras.datasets.cifar10.load_data()"

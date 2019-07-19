@@ -23,4 +23,3 @@ training:
 
 device:
     intra_threads: 32
-    blocktime: 0
