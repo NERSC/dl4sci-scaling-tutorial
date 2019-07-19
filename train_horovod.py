@@ -21,6 +21,11 @@ from utils.device import configure_session
 from utils.optimizers import get_optimizer
 from utils.callbacks import TimingCallback
 
+# Suppress TF warnings
+import tensorflow as tf
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+tf.logging.set_verbosity(logging.ERROR)
+
 #load dictionary from argparse
 class StoreDictKeyPair(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
