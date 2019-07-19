@@ -19,13 +19,14 @@ from the CIFAR10 dataset on multiple nodes with synchronous data parallelism.
 
 ## Links
 
-NERSC JupyterHub: https://jupyter.nersc.gov
+NERSC JupyterHub: https://jupyter-dl.nersc.gov
 
 Slides: https://drive.google.com/drive/folders/10NqOLaqPTZ0nobE7JNSaGwrXQi_ACD35?usp=sharing
 
 ## Installation
 
 1. Start a terminal on Cori, either via ssh or from the Jupyter interface.
+    * **IMPORTANT: if using jupyter, you need to use a SHARED CPU. Click the CPU button instead of the GPU button to run this example!**
 2. Clone the repository using git:\
    `git clone https://github.com/NERSC/dl4sci-scaling-tutorial.git`
 
